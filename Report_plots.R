@@ -66,7 +66,8 @@ a <- ggplot(allregressions, aes(x=return, y=GEV, group=CF, colour = CF)) +
 b <- var_bar_plot(Annual, "OverPrecip99", cols=colors3, ylab="Days/Yr",
              title=paste0("Average Days/Yr Precipitation > Historical 99th\n Percentile (", round(HistPr99, 1), " in) in ", Yr, " vs ", BasePeriod))
 g <- grid.arrange(a,b,nrow=2)
-ggsave("Recurrenceinterval-OverPrecip95-Panel.png", plot=g,path = FigDir, height=PanelHeight, width=PanelWidth,bg="white")
+annotate_figure(g, fig.lab=if(MethodCaption == "Y"){"Q"},fig.lab.pos = "bottom.right")
+ggsave("Recurrenceinterval-OverPrecip99-Panel.png", path = FigDir, height=PanelHeight, width=PanelWidth,bg="white")
 
 
 
