@@ -50,7 +50,7 @@ r <- r+ theme(legend.title=element_text(size=16),legend.text=element_text(size=1
 ggsave("Runoff.in-Timeseries.png", r+labs(title=paste0(SiteID,"-Historical and future\n mean annual runoff (inches/Yr)")), path = FigDir, height=PlotHeight, width=PlotWidth)
 
 # SWEaccum
-s<-LT_plot(WBAvgs, max_pack.in, rollvar=SWEaccum.inRoll10,cols=col,yaxis="Mean annual accumulated SWE (in/year)",title="",CFmethod="I")
+s<-LT_plot(WBAvgs, max_pack.in, rollvar=SWEaccum.inRoll10,cols=col,yaxis="Mean annual accumulated SWE\n (in/year)",title="",CFmethod="I")
 s <- s+ theme(legend.title=element_text(size=16),legend.text=element_text(size=16),legend.position = "bottom", legend.spacing.x = unit(0.5, 'cm'))
 ggsave("SWEaccum.in-Timeseries.png", s+labs(title=paste0(SiteID,"-Historical and future\n mean annual snow water equivalenat (SWE;inches/Yr)")),path = FigDir, height=PlotHeight, width=PlotWidth)
 
