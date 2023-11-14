@@ -10,7 +10,8 @@ knitr::opts_chunk$set(
 
 library(here); library(plyr); # Use here::here when package lubridate is used
 library(plotrix); library(zoo); library(ggplot2); library(grid); library(cowplot); library(reshape2); library(raster); library(ncdf4); library(reshape2); library(WriteXLS); library(data.table); library(RColorBrewer); library(ggrepel); library(lubridate); library(dplyr); library(forcats); library(openxlsx); library("WaterBalance"); library(sf); library(raster); library(R.utils); library(tmap); library(tmaptools); library(ggmap); library(ggspatial);
-library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr);  library(stringr); library(ggpubr); library(lemon); library(ggfortify); library(extRemes)
+library(gridExtra); library(SPEI); library(tidyr); library(tibble); library(sp); library(skimr);  library(stringr); library(ggpubr); library(lemon); library(ggfortify); library(extRemes);
+library(terra); library(rasterVis);library(sf)
 
 
 
@@ -71,14 +72,17 @@ CFs_all <- c("Warm Wet", "Hot Wet", "Central", "Warm Dry", "Hot Dry")
 ##Color schemes
 
 #Colors for CF values plotted side by side (match order of CFs vector)
-colors5 <-  c("#6EB2D4", "#05689F", "#F6B294", "#CA0020","grey")
-colors5.2 <- c("#6EB2D4", "#05689F", "grey", "#F6B294", "#CA0020")
+# colors5 <-  c("#6EB2D4", "#05689F", "#F6B294", "#CA0020","grey")#Old colors
+colors5 <- c("#2B83BA", "#ABDDA4","#FDAE61", "#D7191C", "grey") #RColorBrewer Spectral
+# colors5.2 <- c("#6EB2D4", "#05689F", "grey", "#F6B294", "#CA0020")#Old colors
+colors5.2 <- c("#2B83BA", "#ABDDA4", "grey","#FDAE61", "#D7191C") #RColorBrewer Spectral
 
 centroids_csv <- "Y" #Switch for using Tercek csvs or downloading own data
 
 Indiv_method <- "pca" # Switch for method Indiv_method = c("corner", "pca")
 
 Percent_skill_cutoff = .1 #percentage of models to drop from ranking
+MethodCaption="Y" # Indicates whether Q/I present at bottom of plot to ID CF method used
 
 # --------- Information for Climate Futures Analyses (MACA) ------------------ #
 
@@ -135,11 +139,12 @@ source(here::here("scripts", "Scatter_and_diagnostic.R"), local = knitr::knit_gl
 
 ## ----WarmWet/HotDry, message=FALSE, warning=FALSE, include = FALSE------------
 # Specify Climate Futures
+DataFile <- list.files(path = DataDir, pattern = 'Final_Environment.RData', full.names = TRUE) # Environment needs to be added if not parsing MACA data
+load(DataFile)
 
 FutureSubset <- CFs_all[c(1,5)]; CFs = FutureSubset  # Pick pair of climate futures.
-# WB_GCMs <- subset(WB_GCMs, CF %in% CFs)
-
 CF_abbreviation <- "WW-HD"
+# WB_GCMs <- subset(WB_GCMs, CF %in% CFs)
 
 colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
 #colors2<- c("#F3D3CB","#12045C")  # Select pair of climate futures - HotWet/WarmDry
@@ -184,18 +189,20 @@ source(here::here("scripts", "Report_plots.R"))
 
 ## ----WarmDry/HotWet, message=FALSE, warning=FALSE, include = FALSE------------
 # Specify Climate Futures
+DataFile <- list.files(path = DataDir, pattern = 'Final_Environment.RData', full.names = TRUE) # Environment needs to be added if not parsing MACA data
+load(DataFile)
 
-FutureSubset <- CFs_all[c(4,2)]; CFs = FutureSubset  # Pick pair of climate futures.
-CF_abbreviation <- "WD-HW"
-
+FutureSubset <- CFs_all[c(1,5)]; CFs = FutureSubset  # Pick pair of climate futures.
+CF_abbreviation <- "WW-HD"
 # WB_GCMs <- subset(WB_GCMs, CF %in% CFs)
 
-# colors2<- c("#9A9EE5","#E10720")  # Select pair of climate futures - WarmWet/HotDry
-colors2<- colors5[c(3,2)] # Select pair of climate futures - HotWet/WarmDry
+colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
+#colors2<- c("#F3D3CB","#12045C")  # Select pair of climate futures - HotWet/WarmDry
 
 colors3<-c("white",colors2)
-# col<- c("darkgray","#9A9EE5","#E10720")  # WarmWet/HotDry
-col<- c("darkgray", colors2)  # HotWet/WarmDry
+col<- c("darkgray",colors2)  # WarmWet/HotDry
+#col<- c("darkgray","#F3D3CB","#12045C")  # HotWet/WarmDry
+MethodCaption="Y" # Indicates whether Q/I present at bottom of plot to ID CF method used
 
 CFDir = paste0(OutDir,"WarmDry_HotWet/") # for .csv's
 if(dir.exists(CFDir) == FALSE){
