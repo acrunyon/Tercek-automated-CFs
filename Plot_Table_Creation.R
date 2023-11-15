@@ -238,46 +238,55 @@ pca <- prcomp(FM, center = TRUE,scale. = TRUE)
 
 ggsave("PCA-loadings.png", plot=autoplot(pca, data = FM, loadings = TRUE,label=TRUE),width = PlotWidth, height = PlotHeight, path = OutDir) 
 
-pca.df<-as.data.frame(pca$x) 
+pca.df<-as.data.frame(pca$x)
+write.csv(pca.df, paste0(OutDir, "PCA-loadings.csv"))
 
+#Take the min/max of each of the PCs
 PCs <-rbind(data.frame(GCM = c(rownames(pca.df)[which.min(pca.df$PC1)],rownames(pca.df)[which.max(pca.df$PC1)]),PC="PC1"),
             data.frame(GCM = c(rownames(pca.df)[which.min(pca.df$PC2)],rownames(pca.df)[which.max(pca.df$PC2)]),PC="PC2"))
 
+#Assigns CFs to diagonals
 diagonals <- rbind(data.frame(CF = CFs_all[c(1,5)],diagonals=factor("diagonal1")),data.frame(CF = CFs_all[c(4,2)],diagonals=factor("diagonal2")))
+
 PCA <- CF_GCM %>% filter(GCM %in% PCs$GCM) %>% left_join(diagonals,by="CF") %>% right_join(PCs,by="GCM")
 
 ID.redundant.gcm <- function(PCA){
-  redundant.diag=count(PCA,diagonals)$diagonals[which(count(PCA,diagonals)$n==1)]
-  PC.foul = PCA$PC[which(PCA$diagonals == redundant.diag)]
-  PCA$GCM[which(PCA$PC == PC.foul & PCA$GCM != PCA$GCM[which(PCA$diagonals == redundant.diag)])]
+  redundant.diag=count(PCA,diagonals)$diagonals[which(count(PCA,diagonals)$n==1)] #ID redundant diagonal
+  PC.foul = PCA$PC[which(PCA$diagonals == redundant.diag)] #ID which PC has the redundant diagonal
+  PCA$GCM[which(PCA$PC == PC.foul & PCA$GCM != PCA$GCM[which(PCA$diagonals == redundant.diag)])] #ID GCM that is in both the  redundant diagonal and the duplicative PC
 }
 
 Future_Means %>% mutate(pca = ifelse(GCM %in% PCs$GCM[which(PCs$PC=="PC1")], as.character(CF), #assign PCs to quadrants and select those gcms
                                      ifelse(GCM %in% PCs$GCM[which(PCs$PC=="PC2")], as.character(CF),NA))) -> Future_Means #Future_Means
-if(length(setdiff(CFs_all[CFs_all != "Central"],Future_Means$pca)) > 0){ #if a quadrant is missing 
+
+if(length(
+  setdiff(CFs_all[CFs_all != "Central"],Future_Means$pca)) > 0){ #if a quadrant is missing 
   Future_Means$pca[which(Future_Means$corners == setdiff(CFs_all[CFs_all != "Central"],Future_Means$pca))] = setdiff(CFs_all[CFs_all != "Central"],Future_Means$pca) #assign corners selection to that CF
-  Future_Means$pca[which(Future_Means$GCM == ID.redundant.gcm(PCA))] = NA
+  if(nrow(PCA[duplicated(PCA$GCM),]) > 0) { #If there is a redundant GCM
+    Future_Means$pca = Future_Means$pca #Do nothing - otherwise end up with empty quadrant. This line could be removed and make the previous statment inverse but it makes it more confusing what's gonig on that way
+  } else{
+    Future_Means$pca[which(Future_Means$GCM == ID.redundant.gcm(PCA))] = NA #Removes the GCM that is in redundant diagonal
+  }
 }
 
-
-Future_Means %>% mutate(select = eval(parse(text=paste0("Future_Means$",Indiv_method)))) -> Future_Means 
+Future_Means %>% mutate(select = eval(parse(text=paste0("Future_Means$",Indiv_method)))) -> Future_Means
 Future_Means %>% drop_na(select) %>% select(c(GCM,CF)) -> WB_GCMs 
 
 rm(lx,ux,ly,uy,ww,wd,hw,hd, pts, FM, pca,pca.df,PCs,diagonals,PCA) 
 
 
 #######################
-## CHANGE CF NAMES FOR DRY/DAMP
-dry.quadrant = CFs_all[grepl('Dry', CFs_all)]
-split <- Future_Means %>% filter(CF == dry.quadrant) %>% summarise(PrcpMean=mean(DeltaPr*365))
-CFs_all <- if(split$PrcpMean>0.5) {gsub("Dry","Damp",CFs_all)} else(CFs_all)
-WB_GCMs <- WB_GCMs %>% rowwise() %>% mutate(CF = ifelse(split$PrcpMean>0.5, gsub("Dry","Damp",CF),CF))
-
-Future_Means %>% rowwise() %>% 
-  mutate(CF = ifelse(split$PrcpMean>0.5, gsub("Dry","Damp",CF),CF)) %>% 
-  mutate(corners = ifelse(split$PrcpMean>0.5, gsub("Dry","Damp",corners),corners)) %>% 
-  mutate(pca = ifelse(split$PrcpMean>0.5, gsub("Dry","Damp",pca),pca)) %>% 
-  mutate(select = ifelse(split$PrcpMean>0.5, gsub("Dry","Damp",select),select))-> Future_Means
+# ## CHANGE CF NAMES FOR DRY/DAMP
+# dry.quadrant = CFs_all[grepl('Damp', CFs_all)]
+# split <- Future_Means %>% filter(CF == dry.quadrant) %>% summarise(PrcpMean=mean(DeltaPr*365))
+# CFs_all <- if(split$PrcpMean>1.5) {gsub("Dry","Damp",CFs_all)} else(CFs_all)
+# WB_GCMs <- WB_GCMs %>% rowwise() %>% mutate(CF = ifelse(split$PrcpMean>1.5, gsub("Dry","Damp",CF),CF))
+# 
+# Future_Means %>% rowwise() %>% 
+#   mutate(CF = ifelse(split$PrcpMean>1.5, gsub("Dry","Damp",CF),CF)) %>% 
+#   mutate(corners = ifelse(split$PrcpMean>1.5, gsub("Dry","Damp",corners),corners)) %>% 
+#   mutate(pca = ifelse(split$PrcpMean>1.5, gsub("Dry","Damp",pca),pca)) %>% 
+#   mutate(select = ifelse(split$PrcpMean>1.5, gsub("Dry","Damp",select),select))-> Future_Means
 
 Future_Means$CF=as.factor(Future_Means$CF)
 Future_Means$CF = factor(Future_Means$CF,ordered=TRUE,levels=CFs_all)
