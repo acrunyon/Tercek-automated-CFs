@@ -7,27 +7,27 @@ SeasonLabels = c("Winter", "Spring","Summer", "Fall")
 degF <- "(\u00B0F)"
 
 #Height and width 
-PlotWidth = 10
-PlotHeight = 7
+PlotWidth = 9
+PlotHeight = 6
 
 #Panel plot width and height
-PanelWidth = 11
-PanelHeight = 11 
+PanelWidth = 9
+PanelHeight = 9
 
 #ggplot theme to control formatting parameters for plots with month on the x-axis
-PlotTheme = theme(axis.text=element_text(size=13),    #Text size for axis tick mark labels
+PlotTheme = theme(axis.text=element_text(size=14),    #Text size for axis tick mark labels
                   axis.title.x=element_blank(),               #Text size and alignment for x-axis label
-                  axis.title.y=element_text(size=17, vjust=0.5,  margin=margin(t=20, r=10, b=20, l=10)),              #Text size and alignment for y-axis label
-                  plot.title=element_text(size=18,face="bold",hjust=0.5, margin=margin(t=20, r=20, b=20, l=20)),      #Text size and alignment for plot title
+                  axis.title.y=element_text(size=18, vjust=0.5,  margin=margin(t=20, r=20, b=20, l=20)),              #Text size and alignment for y-axis label
+                  plot.title=element_text(size=20,face="bold",hjust=0.5, margin=margin(t=20, r=20, b=20, l=20)),      #Text size and alignment for plot title
                   legend.title=element_text(size=17),                                                                    #Text size of legend category labels
                   legend.text=element_text(size=14), legend.background = element_rect(color = NA),                                                                   #Text size of legend title
                   legend.position = "bottom")  
 
 BarPlotTheme = theme(axis.text.x=element_text(size=16),    #Text size for axis tick mark labels
-                     axis.text.y=element_text(size=13),
+                     axis.text.y=element_text(size=14),
                      axis.title.x=element_blank(),               #Text size and alignment for x-axis label
-                     axis.title.y=element_text(size=17, vjust=0.5,  margin=margin(t=20, r=20, b=20, l=20)),              #Text size and alignment for y-axis label
-                     plot.title=element_text(size=18,face="bold",hjust=0.5, margin=margin(t=20, r=20, b=20, l=20)),      #Text size and alignment for plot title
+                     axis.title.y=element_text(size=18, vjust=0.5,  margin=margin(t=20, r=20, b=20, l=20)),              #Text size and alignment for y-axis label
+                     plot.title=element_text(size=20,face="bold",hjust=0.5, margin=margin(t=20, r=20, b=20, l=20)),      #Text size and alignment for plot title
                      legend.position = "none") 
 
 ############ PLOT FUNCTIONS #############
