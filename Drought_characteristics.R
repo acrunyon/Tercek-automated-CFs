@@ -5,9 +5,9 @@ SPEI_annual_bar <- function(data, period.box=T, title,CFmethod=""){
     {if(period.box==T) geom_rect(xmin=Yr-Range/2, xmax=Yr+Range/2, ymin=-Inf, ymax=Inf, alpha=0.1, fill="darkgray", col="darkgray")} +
     geom_bar(stat="identity",aes(fill=col),col="black") + 
     geom_hline(yintercept=-.5,linetype=2,colour="black",size=1) +
-    scale_fill_manual(name="",values =c("turquoise2","orange1"),drop=FALSE) +
+    scale_fill_manual(name="",values =c("turquoise2","darkorange3"),drop=FALSE) +
     labs(title = title, 
-         x = "Date", y = "SPEI"),caption=
+         x = "Date", y = "SPEI",caption=
            if(MethodCaption == "Y"){CFmethod}) +
     guides(color=guide_legend(override.aes = list(size=7))) + PlotTheme
 }
@@ -250,7 +250,9 @@ for (i in 1:length(Drought_char$CF)){
   Drought_char$Drt.Free[i]<-mean(rle(subset(Future.drt,CF==name)$length)$lengths[which(rle(subset(Future.drt,CF==name)$length)$values==0)])
   }
 
-Drought_char<-rbind(Hist_char,Drought_char) 
+Drought_char<-rbind(Hist_char,Drought_char)
+Drought_char$Severity = Drought_char$Severity*-1
+Drought_char$Intensity = Drought_char$Intensity*-1
 
 # csv for averages for each CF for hist and future periods
 write.csv(Drought_char,paste0(TableDir,"Drought_characteristics.csv"),row.names=FALSE)
@@ -267,12 +269,12 @@ ggsave("DroughtDuration-Bar.png", path = FigDir, height=PlotHeight, width=PlotWi
 
 #Drought severity barplot
 var_bar_plot(Drought_all,"Severity", colors3, paste0(SiteID, "-Average Drought Severity"), 
-             "Severity (Intensity * Duration)",CFmethod="I") + coord_cartesian(ylim = c(0, min(Drought_all$Severity)))
+             "Severity (Intensity * Duration)",CFmethod="I") + coord_cartesian(ylim = c(0, max(Drought_all$Severity)))
 ggsave("DroughtSeverity-Bar.png", path = FigDir, height=PlotHeight, width=PlotWidth, bg="white")
 
 #Drought intensity barplot
 var_bar_plot(Drought_all,"Intensity", colors3, paste0(SiteID, "-Average Drought Intensity"), 
-             "Intensity (Minimum SPEI values)",CFmethod="I") + coord_cartesian(ylim = c(0, min(Drought_all$Intensity)))
+             "Intensity (Minimum SPEI values)",CFmethod="I") + coord_cartesian(ylim = c(0, max(Drought_all$Intensity)))
 ggsave("DroughtIntensity-Bar.png", path = FigDir, height=PlotHeight, width=PlotWidth, bg="white")
 
 #Drought-free interval barplot
@@ -320,4 +322,9 @@ drt.char <-grid_arrange_shared_legend(c+ rremove("x.text"),d+ rremove("x.text"),
                                       top = textGrob(paste0(SiteID, "-Average drought characteristics"),gp=gpar(fontface="bold", col="black", fontsize=26,hjust=0.5)))
 g <- grid.arrange(spei.time, drt.char,nrow=2,ncol = 1, clip = FALSE)
 annotate_figure(g,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.right")
-ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight, width=PanelWidth,bg = 'white')                     
+ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight, width=PanelWidth,bg = 'white')
+
+# Only SPEI plots
+g <- grid.arrange(spei.time,nrow=1,ncol = 1, clip = FALSE)
+annotate_figure(g,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.right")
+ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
