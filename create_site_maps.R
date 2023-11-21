@@ -107,7 +107,7 @@ box = sf::st_bbox(adjacent_poly)
 #                          maptype = "terrain",
 #                          crop = FALSE, zoom = calc_zoom(lat = c(box[2],box[4]),lon=c(box[1],box[3]))))
 
-ggmap() + 
+ggplot() + 
   geom_sf(data = adjacent_poly_sf, inherit.aes = FALSE, aes(color = "MACA grid"), fill = NA, lwd = 1) + 
   geom_sf(data = maca.sf, inherit.aes = FALSE,fill = NA,lwd= 1.5, aes(colour="Selected CMIP5 cell")) +
   geom_sf(data = park, inherit.aes = FALSE, aes(color = "Park"), fill = NA,lwd=1) +
