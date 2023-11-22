@@ -192,12 +192,12 @@ source(here::here("scripts", "Report_plots.R"))
 DataFile <- list.files(path = DataDir, pattern = 'Final_Environment.RData', full.names = TRUE) # Environment needs to be added if not parsing MACA data
 load(DataFile)
 
-FutureSubset <- CFs_all[c(1,5)]; CFs = FutureSubset  # Pick pair of climate futures.
-CF_abbreviation <- "WW-HD"
+FutureSubset <- CFs_all[c(4,2)]; CFs = FutureSubset  # Pick pair of climate futures.
+CF_abbreviation <- "WD-HW"
 # WB_GCMs <- subset(WB_GCMs, CF %in% CFs)
 
-colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
-#colors2<- c("#F3D3CB","#12045C")  # Select pair of climate futures - HotWet/WarmDry
+#colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
+colors2<- colors5[c(3,2)] # Select pair of climate futures - HotWet/WarmDry
 
 colors3<-c("white",colors2)
 col<- c("darkgray",colors2)  # WarmWet/HotDry
