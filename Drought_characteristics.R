@@ -327,4 +327,4 @@ ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight, w
 # Only SPEI plots
 g <- grid.arrange(spei.time,nrow=1,ncol = 1, clip = FALSE)
 annotate_figure(g,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.right")
-ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
+ggsave("SPEI-Panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
