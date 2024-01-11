@@ -73,10 +73,10 @@ CFs_all <- c("Warm Wet", "Hot Wet", "Central", "Warm Dry", "Hot Dry")
 
 #Colors for CF values plotted side by side (match order of CFs vector)
 # colors5 <-  c("#6EB2D4", "#05689F", "#F6B294", "#CA0020","grey")#Old colors
-colors5 <- c("#2B83BA", "#ABDDA4","#FDAE61", "#D7191C", "grey") #RColorBrewer Spectral
+colors5 <- c("#76B8E0", "#4DAA40", "#FDAE61", "#D7191C", "grey") #New colors
 # colors5.2 <- c("#6EB2D4", "#05689F", "grey", "#F6B294", "#CA0020")#Old colors
-colors5.2 <- c("#2B83BA", "#ABDDA4", "grey","#FDAE61", "#D7191C") #RColorBrewer Spectral
-
+colors5.2 <- c("#76B8E0", "#4DAA40", "grey","#FDAE61", "#D7191C") #New colors
+  
 centroids_csv <- "Y" #Switch for using Tercek csvs or downloading own data
 
 Indiv_method <- "pca" # Switch for method Indiv_method = c("corner", "pca")
@@ -192,12 +192,12 @@ source(here::here("scripts", "Report_plots.R"))
 DataFile <- list.files(path = DataDir, pattern = 'Final_Environment.RData', full.names = TRUE) # Environment needs to be added if not parsing MACA data
 load(DataFile)
 
-FutureSubset <- CFs_all[c(1,5)]; CFs = FutureSubset  # Pick pair of climate futures.
-CF_abbreviation <- "WW-HD"
+FutureSubset <- CFs_all[c(4,2)]; CFs = FutureSubset  # Pick pair of climate futures.
+CF_abbreviation <- "WD-HW"
 # WB_GCMs <- subset(WB_GCMs, CF %in% CFs)
 
-colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
-#colors2<- c("#F3D3CB","#12045C")  # Select pair of climate futures - HotWet/WarmDry
+#colors2<- colors5[c(1,4)] # Select pair of climate futures - WarmWet/HotDry
+colors2<- colors5[c(3,2)] # Select pair of climate futures - HotWet/WarmDry
 
 colors3<-c("white",colors2)
 col<- c("darkgray",colors2)  # WarmWet/HotDry
