@@ -3,9 +3,9 @@
 SPEI_annual_bar <- function(data, period.box=T, title,CFmethod=""){
   ggplot(data = data, aes(x=as.numeric(as.character(Year)), y=SPEI,fill = col)) + 
     {if(period.box==T) geom_rect(xmin=Yr-Range/2, xmax=Yr+Range/2, ymin=-Inf, ymax=Inf, alpha=0.1, fill="darkgray", col="darkgray")} +
-    geom_bar(stat="identity",aes(fill=col),col="black") + 
+    geom_bar(stat="identity",aes(fill=col),col="gray30",size=.8) + 
     geom_hline(yintercept=-.5,linetype=2,colour="black",size=1) +
-    scale_fill_manual(name="",values =c("turquoise2","darkorange3"),drop=FALSE) +
+    scale_fill_manual(name="",values =c("turquoise2","darkorange4"),drop=FALSE) +
     labs(title = title, 
          x = "Date", y = "SPEI",caption=
            if(MethodCaption == "Y"){CFmethod}) +
@@ -328,3 +328,5 @@ ggsave("DroughtCharacteristics-2-Panel.png",path = FigDir, height=PanelHeight, w
 g <- grid.arrange(spei.time,nrow=1,ncol = 1, clip = FALSE)
 annotate_figure(g,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.right")
 ggsave("SPEI-Panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
+
+#Only characteristics plots
