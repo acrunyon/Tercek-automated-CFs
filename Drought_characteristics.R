@@ -5,7 +5,7 @@ SPEI_annual_bar <- function(data, period.box=T, title,CFmethod=""){
     {if(period.box==T) geom_rect(xmin=Yr-Range/2, xmax=Yr+Range/2, ymin=-Inf, ymax=Inf, alpha=0.1, fill="darkgray", col="darkgray")} +
     geom_bar(stat="identity",aes(fill=col),col="gray30",size=.8) + 
     geom_hline(yintercept=-.5,linetype=2,colour="black",size=1) +
-    scale_fill_manual(name="",values =c("turquoise2","darkorange4"),drop=FALSE) +
+    scale_fill_manual(name="",values =c("white","black"),drop=FALSE) +
     labs(title = title, 
          x = "Date", y = "SPEI",caption=
            if(MethodCaption == "Y"){CFmethod}) +
