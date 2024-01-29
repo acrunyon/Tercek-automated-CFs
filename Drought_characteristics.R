@@ -330,3 +330,8 @@ annotate_figure(g,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.ri
 ggsave("SPEI-Panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
 
 #Only characteristics plots
+drt.char <-grid_arrange_shared_legend(c+ rremove("x.text"),d+ rremove("x.text"),e+ rremove("x.text"),
+                                      ncol=3,nrow=1,position="bottom",
+                                      top = textGrob(paste0(SiteID, "-Average drought characteristics"),gp=gpar(fontface="bold", col="black", fontsize=26,hjust=0.5)))
+annotate_figure(drt.char,fig.lab=if(MethodCaption == "Y"){"I"},fig.lab.pos = "bottom.right")
+ggsave("Drought-characteristics-panel.png",path = FigDir, height=PanelHeight/2, width=PanelWidth,bg = 'white')
